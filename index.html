@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> مولد الباركود</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary: #6366f1;
+            --accent: #a855f7;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e2937 100%);
+            color: #e2e8f0;
+            font-family: 'Cairo', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(99,102,241,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(168,85,247,0.08) 0%, transparent 50%);
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 680px;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+
+        .logo-dot {
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.7);
+        }
+
+        h1 {
+            font-size: 2.9rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #c4d0ff, #e0bbff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.15rem;
+        }
+
+        .card {
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 28px;
+            padding: 50px 45px;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+        }
+
+        input {
+            width: 100%;
+            padding: 18px 24px;
+            font-size: 1.3rem;
+            background: rgba(30, 41, 59, 0.85);
+            border: 2px solid rgba(148, 163, 184, 0.25);
+            border-radius: 18px;
+            color: #f1f5f9;
+            text-align: center;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+            font-family: 'Cairo', monospace;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.25);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        button {
+            flex: 1;
+            padding: 16px 20px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-generate {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: white;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.35);
+        }
+
+        .btn-download {
+            background: rgba(148, 163, 184, 0.15);
+            color: #e2e8f0;
+            border: 2px solid rgba(148, 163, 184, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-4px);
+        }
+
+        .btn-generate:hover {
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.45);
+        }
+
+        #barcode-container {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 25px;
+            min-height: 220px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #barcode {
+            max-width: 100%;
+        }
+
+        /* زر مطور الموقع تحت الباركود */
+        .developer-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #0088cc, #229ed9);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .developer-btn:hover {
+            transform: scale(1.06);
+            box-shadow: 0 12px 35px rgba(0, 136, 204, 0.5);
+        }
+
+        .developer-btn img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-dot"></div>
+                <h1> باركود </h1>
+            </div>
+            <p class="subtitle">مولد الباركود • </p>
+        </div>
+
+        <div class="card">
+            <input type="text" id="barcodeInput" placeholder="أدخل النص أو الرقم لتوليد الباركود...">
+
+            <div class="buttons">
+                <button class="btn-generate" onclick="generate()">توليد الباركود</button>
+                <button class="btn-download" onclick="downloadBarcode()">تحميل كـ PNG</button>
+            </div>
+
+            <div id="barcode-container">
+                <svg id="barcode"></svg>
+            </div>
+
+            <!-- زر مطور الموقع تحت الباركود مباشرة -->
+            <a href="https://t.me/nhde811" target="_blank" class="developer-btn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram">
+                مطور الموقع
+            </a>
+        </div>
+
+        <div class="footer">
+            © 2026 Al-Nahdi • جميع الحقوق محفوظة
+        </div>
+    </div>
+
+    <script>
+        function generate() {
+            let value = document.getElementById("barcodeInput").value.trim();
+            if (!value) {
+                alert("يرجى إدخال نص أو رقم لتوليد الباركود");
+                return;
+            }
+
+            JsBarcode("#barcode", value, {
+                format: "CODE128",
+                lineColor: "#1e2937",
+                width: 2.8,
+                height: 140,
+                displayValue: true,
+                fontSize: 20,
+                margin: 25,
+                background: "#ffffff"
+            });
+        }
+
+        function downloadBarcode() {
+            const svg = document.getElementById("barcode");
+            if (!svg.innerHTML) {
+                alert("قم بتوليد الباركود أولاً!");
+                return;
+            }
+
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+            canvas.width = 1200;
+            canvas.height = 600;
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+            const url = URL.createObjectURL(svgBlob);
+
+            const img = new Image();
+            img.onload = function() {
+                const scale = Math.min(900 / img.width, 380 / img.height);
+                const w = img.width * scale;
+                const h = img.height * scale;
+                const x = (canvas.width - w) / 2;
+                const y = (canvas.height - h) / 2;
+
+                ctx.drawImage(img, x, y, w, h);
+
+                const pngUrl = canvas.toDataURL("image/png");
+                const link = document.createElement("a");
+                link.href = pngUrl;
+                link.download = "my-barcode.png";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            };
+            img.src = url;
+        }
+
+        // دعم زر Enter
+        document.getElementById("barcodeInput").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") generate();
+        });
+    </script>
+</body>
+</html>
